@@ -32,7 +32,7 @@ export default function LoginCard({ onLogin }) {
             KSM Internet Of Things
           </p>
           <p className="font-titillium font-normal text-sm">
-            UPN &quot;Veteran&quot; Jakarta
+            UPN "Veteran" Jakarta
           </p>
         </div>
       </div>
