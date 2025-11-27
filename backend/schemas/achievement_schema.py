@@ -1,10 +1,18 @@
 from pydantic import BaseModel
+from typing import List
 
-class AchievementPublic(BaseModel):
-    id: int
+class AchievementBase(BaseModel):
     title: str
-    description: str
-    image_url: str
+    award: str | None = None
+    description: str | None = None
+    image: str | None = None
+    images: List[str] = []
+    time: str | None = None
+    organizer: str | None = None
+    contributors: List[str] = []
+
+class AchievementResponse(AchievementBase):
+    id: int
 
     class Config:
         orm_mode = True

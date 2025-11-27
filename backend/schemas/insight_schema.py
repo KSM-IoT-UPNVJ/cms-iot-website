@@ -1,11 +1,14 @@
 from pydantic import BaseModel
 
-class InsightPublic(BaseModel):
+class InsightBase(BaseModel):
+    name: str
+    image: str
+    description: str | None = None
+    gradient: str | None = None
+
+
+class InsightPublic(InsightBase):
     id: int
-    title: str
-    summary: str
-    content: str
-    thumbnail: str
 
     class Config:
         orm_mode = True
