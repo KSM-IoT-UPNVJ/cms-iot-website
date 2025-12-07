@@ -1,0 +1,51 @@
+from pydantic import BaseModel
+from typing import Optional, List
+
+class ProjectBase(BaseModel):
+    slug: str
+    title: str
+    githubLink: str
+    description: str
+    division: str
+    date: str
+    divisionImage: str
+    image: str
+
+    # Optional
+    subtitle2: Optional[str] = None
+    description2: Optional[str] = None
+    image2: Optional[str] = None
+    subtitle3: Optional[str] = None
+    description3: Optional[str] = None
+
+class ProjectCreate(ProjectBase):
+    pass
+
+
+class ProjectUpdate(ProjectBase):
+    pass
+
+class MemberBase(BaseModel):
+    name: str
+    title: str
+    image: str
+
+class MemberCreate(MemberBase):
+    pass
+
+
+class MemberUpdate(MemberBase):
+    pass
+
+class MemberResponse(MemberBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
+class ProjectResponse(ProjectBase):
+    id: int
+    hm: List[MemberResponse] = []
+
+    class Config:
+        orm_mode = True
