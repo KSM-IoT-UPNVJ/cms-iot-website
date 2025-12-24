@@ -8,7 +8,7 @@ export default function Nav() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY;
-      const fadePoint = 120; // px sebelum benar-benar hilang
+      const fadePoint = 120;
 
       if (scrollY <= fadePoint) {
         setOpacity(1 - scrollY / fadePoint);
@@ -21,13 +21,36 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleLogout = () => {
+    // sementara redirect manual
+    window.location.href = "/login";
+  };
+
   return (
     <>
-      {/* GARIS UNGU HORIZONTAL DENGAN TRANSISI MEMUDAR */}
+      {/* GARIS UNGU HORIZONTAL */}
       <div
-        className="fixed top-0 left-64 right-0 h-14 bg-[#6A4FB6] pointer-events-none transition-opacity duration-300"
+        className="fixed top-0 left-64 right-0 h-16 bg-[#6A4FB6] pointer-events-none transition-opacity duration-300"
         style={{ opacity, zIndex: 5 }}
       />
+
+      {/* TOMBOL LOGOUT */}
+      <button
+        onClick={handleLogout}
+        className="
+          fixed top-3 right-6
+          bg-red-500 text-white
+          px-4 py-1.5 rounded
+          font-semibold
+          transform transition-all duration-300 ease-out
+          hover:scale-110 hover:shadow-lg
+          active:scale-95
+          hover:bg-red-700
+        "
+        style={{ opacity, zIndex: 10 }}
+      >
+        Logout
+      </button>
 
       {/* SIDEBAR */}
       <aside className="w-64 bg-[#6A4FB6] text-white p-6 min-h-screen relative z-20">
