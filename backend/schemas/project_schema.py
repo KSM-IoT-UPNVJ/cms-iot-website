@@ -23,6 +23,7 @@ class ProjectCreate(ProjectBase):
 
 
 class ProjectUpdate(BaseModel):
+    slug: Optional[str] = None
     title: Optional[str] = None
     githubLink: Optional[str] = None
     description: Optional[str] = None
