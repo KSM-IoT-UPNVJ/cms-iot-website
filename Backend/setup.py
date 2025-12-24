@@ -54,8 +54,8 @@ admin_exists = db.query(Admin).filter(Admin.username == "admin").first()
 
 if not admin_exists:
     admin = Admin(
-        username="admin",
-        password_hash=hash_password("admin123")
+        username="admin", # < jangan lupa ganti
+        password_hash=hash_password("admin123") # < jangan lupa ganti
     )
     db.add(admin)
     db.commit()
