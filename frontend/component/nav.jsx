@@ -1,9 +1,11 @@
 'use client';
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function Nav() {
   const [opacity, setOpacity] = useState(1);
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,9 +23,13 @@ export default function Nav() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleLogout = () => {
-    // sementara redirect manual
-    window.location.href = "/login";
+  const handleLogout = async () => {
+    await fetch("http://localhost:8000/auth/logout", {
+      method: "POST",
+      credentials: "include", 
+    });
+
+    router.push("/login");
   };
 
   return (

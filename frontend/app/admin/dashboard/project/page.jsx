@@ -1,7 +1,8 @@
 'use client';
 
-import { useState, useRef } from "react";
-import Nav from "@/component/nav";
+import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import Nav from "../../../../component/nav";
 
 export default function ProjectsForm() {
   const [formData, setFormData] = useState({
@@ -70,6 +71,29 @@ export default function ProjectsForm() {
 
     alert("Project berhasil disimpan!");
   };
+
+  const router = useRouter();
+  const [checkingAuth, setCheckingAuth] = useState(true);
+
+  useEffect(() => {
+    fetch("http://localhost:8000/auth/me", {
+      credentials: "include",
+    })
+      .then(async (res) => {
+        if (!res.ok) {
+          router.replace("/login"); // 🔒 block access
+        } else {
+          setCheckingAuth(false); // ✅ authorized
+        }
+      })
+      .catch(() => {
+        router.replace("/login");
+      });
+  }, []);
+
+  if (checkingAuth) {
+    return <div>Checking authorization...</div>;
+  }
 
   return (
     <div className="grid grid-cols-[260px_1fr] min-h-screen bg-gray-100">
