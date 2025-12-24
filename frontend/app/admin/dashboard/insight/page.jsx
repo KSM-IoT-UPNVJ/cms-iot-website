@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Nav from "@/component/nav";
 
-export default function About() {
+export default function Insight() {
   const [formData, setFormData] = useState({
     id: '',
     category: '',
@@ -34,10 +34,10 @@ export default function About() {
       <Nav />
 
       {/* FORM */}
-      <div className="flex items-start p-8">
+      <div className="flex items-start p-8 pt-20">
         <div className="bg-white w-full rounded-xl p-10 shadow">
 
-          <h2 className="text-2xl font-bold mb-8">AboutUs</h2>
+          <h2 className="text-2xl font-bold mb-8">Insight</h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
 

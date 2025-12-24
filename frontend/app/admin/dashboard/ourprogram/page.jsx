@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from "react";
-import Nav from "@/component/nav/Nav";
+import Nav from "@/component/nav";
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -34,7 +34,7 @@ export default function Home() {
       <Nav />
 
       {/* Area Konten Putih */}
-      <div className="flex items-start p-8">
+      <div className="flex items-start p-8 pt-20">
         <div className="bg-white w-full rounded-xl p-10 shadow">
 
           <h2 className="text-2xl font-bold mb-8">Home</h2>

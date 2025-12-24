@@ -3,14 +3,14 @@
 import { useState } from "react";
 import Nav from "@/component/nav";
 
-export default function Contact() {
+export default function Home() {
   const [formData, setFormData] = useState({
-    id: '',
-    category: '',
-    image: null,
-    vol: '',
     title: '',
-    link: '',
+    award: '',
+    description: '',
+    image: null,
+    time: '',
+    organizer: '',
   });
 
   const handleChange = (e) => {
@@ -24,7 +24,7 @@ export default function Contact() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert('Data berhasil dikirim!');
+    alert('Achievement berhasil disimpan!');
   };
 
   return (
@@ -33,38 +33,55 @@ export default function Contact() {
       {/* Sidebar Ungu */}
       <Nav />
 
-      {/* FORM */}
-      <div className="flex items-start p-8">
+      {/* Area Konten Putih */}
+      <div className="flex items-start p-8 pt-20">
         <div className="bg-white w-full rounded-xl p-10 shadow">
 
-          <h2 className="text-2xl font-bold mb-8">Contact</h2>
+          {/* JUDUL SAJA YANG DIUBAH */}
+          <h2 className="text-2xl font-bold mb-8">Achievement</h2>
 
           <form onSubmit={handleSubmit} className="space-y-6">
 
+            {/* TITLE */}
             <div>
-              <label className="block mb-1 font-medium">ID</label>
-              <input
-                type="number"
-                name="id"
-                value={formData.id}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-                placeholder="Masukkan ID"
-              />
-            </div>
-
-            <div>
-              <label className="block mb-1 font-medium">Category</label>
+              <label className="block mb-1 font-medium">Title</label>
               <input
                 type="text"
-                name="category"
-                value={formData.category}
+                name="title"
+                value={formData.title}
                 onChange={handleChange}
                 className="w-full border p-2 rounded"
-                placeholder="Masukkan kategori"
+                placeholder="Masukkan judul achievement"
               />
             </div>
 
+            {/* AWARD */}
+            <div>
+              <label className="block mb-1 font-medium">Award</label>
+              <input
+                type="text"
+                name="award"
+                value={formData.award}
+                onChange={handleChange}
+                className="w-full border p-2 rounded"
+                placeholder="Masukkan nama penghargaan"
+              />
+            </div>
+
+            {/* DESCRIPTION */}
+            <div>
+              <label className="block mb-1 font-medium">Description</label>
+              <textarea
+                name="description"
+                value={formData.description}
+                onChange={handleChange}
+                className="w-full border p-2 rounded"
+                placeholder="Masukkan deskripsi achievement"
+                rows={4}
+              />
+            </div>
+
+            {/* IMAGE */}
             <div>
               <label className="block mb-1 font-medium">Image</label>
               <input
@@ -75,42 +92,33 @@ export default function Contact() {
               />
             </div>
 
+            {/* TIME */}
             <div>
-              <label className="block mb-1 font-medium">Vol</label>
+              <label className="block mb-1 font-medium">Time</label>
               <input
-                type="number"
-                name="vol"
-                value={formData.vol}
+                type="date"
+                name="time"
+                value={formData.time}
                 onChange={handleChange}
                 className="w-full border p-2 rounded"
-                placeholder="Masukkan volume"
+                placeholder="Contoh: 2024"
               />
             </div>
 
+            {/* ORGANIZER */}
             <div>
-              <label className="block mb-1 font-medium">Title</label>
-              <input
-                type="text"
-                name="title"
-                value={formData.title}
-                onChange={handleChange}
-                className="w-full border p-2 rounded"
-                placeholder="Masukkan judul"
-              />
-            </div>
-
-            <div>
-              <label className="block mb-1 font-medium">Link</label>
+              <label className="block mb-1 font-medium">Organizer</label>
               <input
                 type="text"
-                name="link"
-                value={formData.link}
+                name="organizer"
+                value={formData.organizer}
                 onChange={handleChange}
                 className="w-full border p-2 rounded"
-                placeholder="Masukkan link"
+                placeholder="Nama penyelenggara"
               />
             </div>
 
+            {/* TOMBOL (TEKS SAJA DIUBAH) */}
             <button
               type="submit"
               className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"

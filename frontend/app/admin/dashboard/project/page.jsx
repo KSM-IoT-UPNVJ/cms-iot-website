@@ -34,7 +34,7 @@ export default function Project() {
       <Nav />
 
       {/* FORM */}
-      <div className="flex items-start p-8">
+      <div className="flex items-start p-8 pt-20">
         <div className="bg-white w-full rounded-xl p-10 shadow">
 
           <h2 className="text-2xl font-bold mb-8">Project</h2>
