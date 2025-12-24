@@ -40,7 +40,7 @@ def update_insight(insight_id: int, data: InsightUpdate, db: Session = Depends(g
     if not item:
         raise HTTPException(status_code=404, detail="Insight not found")
 
-    for key, value in data.dict().items():
+    for key, value in data.dict(exclude_unset=True).items():
         setattr(item, key, value)
 
     db.commit()

@@ -1,54 +1,54 @@
 from pydantic import BaseModel
-from typing import List, Optional
+from typing import List
 
-class HMStaffSchema(BaseModel):
-    name: str
+
+# ---------- DATA ----------
+class OurProgramDataBase(BaseModel):
+    fotoHeader: str
+    headerAuthor: str
+    footerAuthor: str
+    fotoSlider: List[str]
+    fotoKolase: str
+    frontText: str
+    deskripsi1: str
+    deskripsi2: str
+    deskripsi3: str
+    testimoni: str
     title: str
-    image: str
 
     class Config:
         from_attributes = True
 
 
-class OurProgramBase(BaseModel):
+# ---------- AUTHOR ----------
+class OurProgramAuthorBase(BaseModel):
+    namaHeader: str
+    jabatanHeader: str
+    namaFooter: str
+    jabatanFooter: str
+
+    class Config:
+        from_attributes = True
+
+
+# ---------- CREATE ----------
+class OurProgramCreate(BaseModel):
     slug: str
-    title: str
-    githubLink: Optional[str] = None
-    description: str
-    division: str
-    date: str
-    divisionImage: str
-    image: str
-    subtitle2: Optional[str] = None
-    description2: Optional[str] = None
-    image2: Optional[str] = None
-    subtitle3: Optional[str] = None
-    description3: Optional[str] = None
-    hm: List[HMStaffSchema]
+    data: OurProgramDataBase
+    author: OurProgramAuthorBase
 
 
-class OurProgramCreate(OurProgramBase):
-    pass
-
-
+# ---------- UPDATE ----------
 class OurProgramUpdate(BaseModel):
-    title: Optional[str] = None
-    githubLink: Optional[str] = None
-    description: Optional[str] = None
-    division: Optional[str] = None
-    date: Optional[str] = None
-    divisionImage: Optional[str] = None
-    image: Optional[str] = None
-    subtitle2: Optional[str] = None
-    description2: Optional[str] = None
-    image2: Optional[str] = None
-    subtitle3: Optional[str] = None
-    description3: Optional[str] = None
-    hm: Optional[List[HMStaffSchema]] = None
+    data: OurProgramDataBase | None = None
+    author: OurProgramAuthorBase | None = None
 
 
-class OurProgramResponse(OurProgramBase):
-    id: int
+# ---------- RESPONSE ----------
+class OurProgramResponse(BaseModel):
+    slug: str
+    data: OurProgramDataBase
+    author: OurProgramAuthorBase
 
     class Config:
         from_attributes = True

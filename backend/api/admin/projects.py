@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from backend.db.session import get_db
 from backend.models.projects import ProjectsData, ProjectMember
@@ -14,7 +15,15 @@ router = APIRouter(prefix="/admin/projects", tags=["Admin - Projects"])
 def create_project(data: ProjectCreate, db: Session = Depends(get_db)):
     new_item = ProjectsData(**data.dict())
     db.add(new_item)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Slug already exists"
+        )
+
     db.refresh(new_item)
     return new_item
 
@@ -23,30 +32,39 @@ def get_all_projects(db: Session = Depends(get_db)):
     items = db.query(ProjectsData).all()
     return items
 
-@router.get("/{project_id}", response_model=ProjectResponse)
-def get_project(project_id: int, db: Session = Depends(get_db)):
-    item = db.query(ProjectsData).filter(ProjectsData.id == project_id).first()
+@router.get("/{slug}", response_model=ProjectResponse)
+def get_project(slug: str, db: Session = Depends(get_db)):
+    item = db.query(ProjectsData).filter(ProjectsData.slug == slug).first()
+
     if not item:
         raise HTTPException(status_code=404, detail="Project not found")
+
     return item
 
-@router.put("/{project_id}", response_model=ProjectResponse)
-def update_project(project_id: int, data: ProjectUpdate, db: Session = Depends(get_db)):
-    item = db.query(ProjectsData).filter(ProjectsData.id == project_id).first()
+
+@router.put("/{slug}", response_model=ProjectResponse)
+def update_project(slug: str, data: ProjectUpdate, db: Session = Depends(get_db)):
+    item = db.query(ProjectsData).filter(ProjectsData.slug == slug).first()
 
     if not item:
         raise HTTPException(status_code=404, detail="Project not found")
 
-    for key, value in data.dict().items():
+    for key, value in data.dict(exclude_unset=True).items():
         setattr(item, key, value)
 
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Slug already exists")
+
     db.refresh(item)
     return item
 
-@router.delete("/{project_id}")
-def delete_project(project_id: int, db: Session = Depends(get_db)):
-    item = db.query(ProjectsData).filter(ProjectsData.id == project_id).first()
+
+@router.delete("/{slug}")
+def delete_project(slug: str, db: Session = Depends(get_db)):
+    item = db.query(ProjectsData).filter(ProjectsData.slug == slug).first()
 
     if not item:
         raise HTTPException(status_code=404, detail="Project not found")
@@ -55,22 +73,30 @@ def delete_project(project_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "Project deleted"}
 
-@router.post("/{project_id}/members", response_model=MemberResponse)
-def add_member(project_id: int, data: MemberCreate, db: Session = Depends(get_db)):
-    project = db.query(ProjectsData).filter(ProjectsData.id == project_id).first()
+
+@router.post("/{slug}/members", response_model=MemberResponse)
+def add_member(slug: str, data: MemberCreate, db: Session = Depends(get_db)):
+    project = db.query(ProjectsData).filter(ProjectsData.slug == slug).first()
+
     if not project:
         raise HTTPException(status_code=404, detail="Project not found")
 
-    new_member = ProjectMember(project_id=project_id, **data.dict())
+    new_member = ProjectMember(project_id=project.id, **data.dict())
     db.add(new_member)
     db.commit()
     db.refresh(new_member)
     return new_member
 
-@router.get("/{project_id}/members", response_model=list[MemberResponse])
-def get_members(project_id: int, db: Session = Depends(get_db)):
-    members = db.query(ProjectMember).filter(ProjectMember.project_id == project_id).all()
-    return members
+
+@router.get("/{slug}/members", response_model=list[MemberResponse])
+def get_members(slug: str, db: Session = Depends(get_db)):
+    project = db.query(ProjectsData).filter(ProjectsData.slug == slug).first()
+
+    if not project:
+        raise HTTPException(status_code=404, detail="Project not found")
+
+    return project.hm
+
 
 @router.put("/members/{member_id}", response_model=MemberResponse)
 def update_member(member_id: int, data: MemberUpdate, db: Session = Depends(get_db)):
@@ -79,10 +105,15 @@ def update_member(member_id: int, data: MemberUpdate, db: Session = Depends(get_
     if not member:
         raise HTTPException(status_code=404, detail="Member not found")
 
-    for key, value in data.dict().items():
+    for key, value in data.dict(exclude_unset=True).items():
         setattr(member, key, value)
 
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(status_code=409, detail="Slug already exists")
+
     db.refresh(member)
     return member
 
