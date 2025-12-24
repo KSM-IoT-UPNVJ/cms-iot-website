@@ -27,7 +27,7 @@ class HMStaff(Base):
     __tablename__ = "hm_staff"
 
     id = Column(Integer, primary_key=True, index=True)
-    program_id = Column(Integer, ForeignKey("our_program.id"))
+    program_id = Column(Integer, ForeignKey("our_program.id"), nullable=False)
     name = Column(String)
     title = Column(String)
     image = Column(String)

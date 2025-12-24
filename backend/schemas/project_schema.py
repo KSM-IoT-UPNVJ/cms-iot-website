@@ -22,8 +22,21 @@ class ProjectCreate(ProjectBase):
     pass
 
 
-class ProjectUpdate(ProjectBase):
-    pass
+class ProjectUpdate(BaseModel):
+    slug: Optional[str] = None
+    title: Optional[str] = None
+    githubLink: Optional[str] = None
+    description: Optional[str] = None
+    division: Optional[str] = None
+    date: Optional[str] = None
+    divisionImage: Optional[str] = None
+    image: Optional[str] = None
+    subtitle2: Optional[str] = None
+    description2: Optional[str] = None
+    image2: Optional[str] = None
+    subtitle3: Optional[str] = None
+    description3: Optional[str] = None
+
 
 class MemberBase(BaseModel):
     name: str

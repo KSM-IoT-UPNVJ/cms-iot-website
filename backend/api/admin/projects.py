@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from backend.db.session import get_db
 from backend.models.projects import ProjectsData, ProjectMember
@@ -14,7 +15,15 @@ router = APIRouter(prefix="/admin/projects", tags=["Admin - Projects"])
 def create_project(data: ProjectCreate, db: Session = Depends(get_db)):
     new_item = ProjectsData(**data.dict())
     db.add(new_item)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Slug already exists"
+        )
+
     db.refresh(new_item)
     return new_item
 
@@ -37,7 +46,7 @@ def update_project(project_id: int, data: ProjectUpdate, db: Session = Depends(g
     if not item:
         raise HTTPException(status_code=404, detail="Project not found")
 
-    for key, value in data.dict().items():
+    for key, value in data.dict(exclude_unset=True).items():
         setattr(item, key, value)
 
     db.commit()
@@ -79,7 +88,7 @@ def update_member(member_id: int, data: MemberUpdate, db: Session = Depends(get_
     if not member:
         raise HTTPException(status_code=404, detail="Member not found")
 
-    for key, value in data.dict().items():
+    for key, value in data.dict(exclude_unset=True).items():
         setattr(member, key, value)
 
     db.commit()

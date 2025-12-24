@@ -24,7 +24,7 @@ class OurProgramBase(BaseModel):
     image2: Optional[str] = None
     subtitle3: Optional[str] = None
     description3: Optional[str] = None
-    hm: List[HMStaffSchema]
+    hm: List[HMStaffSchema] = []
 
 
 class OurProgramCreate(OurProgramBase):

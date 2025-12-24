@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import IntegrityError
 
 from backend.db.session import get_db
 from backend.models.our_program import OurProgram, HMStaff
@@ -30,23 +31,26 @@ def create_program(data: OurProgramCreate, db: Session = Depends(get_db)):
         description3=data.description3,
     )
 
-    db.add(program)
-    db.commit()
-    db.refresh(program)
-
-    # Add HM staff
     for staff in data.hm:
-        hm_obj = HMStaff(
-            program_id=program.id,
-            name=staff.name,
-            title=staff.title,
-            image=staff.image
+        program.hm.append(
+            HMStaff(
+                name=staff.name,
+                title=staff.title,
+                image=staff.image
+            )
         )
-        db.add(hm_obj)
 
-    db.commit()
+    db.add(program)
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        raise HTTPException(
+            status_code=409,
+            detail="Slug already exists"
+        )
+
     db.refresh(program)
-
     return program
 
 
