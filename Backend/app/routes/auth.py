@@ -29,12 +29,20 @@ def login(
     if not admin or not verify_password(data.password, admin.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
 
+    # ✅ save session
     request.session["admin_id"] = admin.id
     request.session["role"] = admin.role
 
     return {"message": "Login success"}
 
-@router.post("/logout") 
-def logout(request: Request): 
-    request.session.clear() 
+@router.post("/logout")
+def logout(request: Request):
+    request.session.clear()
     return {"message": "Logged out"}
+
+# 🔐 REQUIRED for dashboard protection
+@router.get("/me")
+def me(request: Request):
+    if "admin_id" not in request.session:
+        raise HTTPException(status_code=401)
+    return {"ok": True}
