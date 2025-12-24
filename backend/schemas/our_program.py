@@ -1,5 +1,6 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
+
 
 class HMStaffSchema(BaseModel):
     name: str
@@ -24,7 +25,7 @@ class OurProgramBase(BaseModel):
     image2: Optional[str] = None
     subtitle3: Optional[str] = None
     description3: Optional[str] = None
-    hm: List[HMStaffSchema] = []
+    hm: List[HMStaffSchema] = Field(default_factory=list)
 
 
 class OurProgramCreate(OurProgramBase):

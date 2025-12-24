@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 
 class AchievementImageResponse(BaseModel):
     id: int
@@ -31,8 +31,17 @@ class AchievementCreate(AchievementBase):
     contributors: List[str]
 
 
-class AchievementUpdate(AchievementCreate):
-    pass
+class AchievementUpdate(BaseModel):
+    title: Optional[str] = None
+    award: Optional[str] = None
+    description: Optional[str] = None
+    image: Optional[str] = None
+    time: Optional[str] = None
+    organizer: Optional[str] = None
+
+    images: Optional[List[str]] = None
+    contributors: Optional[List[str]] = None
+
 
 
 class AchievementResponse(AchievementBase):
